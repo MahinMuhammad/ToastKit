@@ -6,3 +6,12 @@ DerivedData/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
+
+# Demo app specific
+Demo/ToastKitDemoApp/ToastKitDemoApp.xcodeproj/xcuserdata/
+Demo/ToastKitDemoApp/ToastKitDemoApp.xcodeproj/project.xcworkspace/xcuserdata/
+Demo/ToastKitDemoApp/DerivedData/
+
+# Workspace
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist

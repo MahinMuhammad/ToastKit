@@ -16,12 +16,12 @@ public final class ToastManager: ObservableObject {
     @Published public var isVisible = false
     
     private var window: UIWindow?
+    private var isWindowSetup = false
     
-    private init() {
-        setupWindow()
-    }
+    private init() {}
     
-    private func setupWindow() {
+    private func setupWindowIfNeeded() {
+        guard !isWindowSetup else { return }
         guard let scene = UIApplication.shared.connectedScenes
             .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else {
             return
@@ -37,14 +37,30 @@ public final class ToastManager: ObservableObject {
         window.rootViewController = hostingController
         
         self.window = window
+        self.isWindowSetup = true
+        
+        /// Give the view hierarchy a moment to settle
+        /// This ensures animations work on first show
+        Task {
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
+        }
     }
     
     public func show(_ message: String, duration: TimeInterval = 4.0) {
-        self.message = message
-        withAnimation(.spring()) {
-            self.isVisible = true
-        }
+        setupWindowIfNeeded()
+        
+        // Small delay to ensure window is ready on first call
         Task { @MainActor in
+            // If this is the first show, wait a tiny bit
+            if !isVisible {
+                try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 second
+            }
+            
+            self.message = message
+            withAnimation(.spring()) {
+                self.isVisible = true
+            }
+            
             try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
             self.hide()
         }
