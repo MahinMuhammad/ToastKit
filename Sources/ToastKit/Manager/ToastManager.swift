@@ -14,6 +14,9 @@ public final class ToastManager: ObservableObject {
     
     @Published public var message = ""
     @Published public var isVisible = false
+    @Published public var theme: ToastTheme = .darkSolid
+    
+    @Published internal var type: ToastType = .vanilla
     
     private var window: UIWindow?
     private var isWindowSetup = false
@@ -46,7 +49,7 @@ public final class ToastManager: ObservableObject {
         }
     }
     
-    public func show(_ message: String, duration: TimeInterval = 4.0) {
+    public func show(_ message: String, type: ToastType = .vanilla, for duration: TimeInterval = 4.0) {
         setupWindowIfNeeded()
         
         // Small delay to ensure window is ready on first call
@@ -57,6 +60,7 @@ public final class ToastManager: ObservableObject {
             }
             
             self.message = message
+            self.type = type
             withAnimation(.spring()) {
                 self.isVisible = true
             }

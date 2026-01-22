@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct ToastContainerView: View {
+    @StateObject private var manager = ToastManager.shared
+    
     var body: some View {
         VStack {
-            ToastView()
+            manager.theme.toast
                 .transition(.move(edge: .top).combined(with: .opacity))
             Spacer()
         }
+        .padding(.horizontal, 25)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
